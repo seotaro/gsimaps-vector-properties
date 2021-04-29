@@ -1,9 +1,10 @@
 import DeckGL from '@deck.gl/react';
-import { GeoJsonLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, BitmapLayer } from '@deck.gl/layers';
 import { MapView } from '@deck.gl/core';
-import { MVTLayer } from '@deck.gl/geo-layers';
+import { MVTLayer, TileLayer } from '@deck.gl/geo-layers';
 import './App.css';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
+import RasterTilePanel from './components/RasterTilePanel'
 
 const INITIAL_VIEW_STATE = {
   longitude: 138.0,
@@ -14,6 +15,8 @@ const INITIAL_VIEW_STATE = {
 };
 
 function App() {
+  const [isEnableBasemap, enableBasemap] = useState(false);
+
   const tooltip = (object) => {
     if (!object) {
       return null;
@@ -41,8 +44,8 @@ function App() {
       html: `${info}`,
       className: 'tooltip',
       style: {
-        backgroundColor: 'black',
-        color: 'white',
+        backgroundColor: '#111111',
+        color: '#eeeeee',
         opacity: 0.75,
       }
     }
@@ -51,12 +54,39 @@ function App() {
 
   return (
     <Fragment>
+      <RasterTilePanel
+        isEnableBasemap={isEnableBasemap}
+        handleChangeEnableBasemap={
+          (async (isEnable) => { enableBasemap(isEnable); })
+        }
+      />
+
       <DeckGL
         initialViewState={INITIAL_VIEW_STATE}
         controller={true}
         getTooltip={({ object }) => tooltip(object)}
         getCursor={({ isHovering }) => isHovering ? 'pointer' : 'grab'}
       >
+        <TileLayer id='raster'
+          data={'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'}
+          minZoom={5}
+          maxZoom={18}
+          tileSize={256}
+          opacity={1.0}
+          visible={isEnableBasemap}
+
+          renderSubLayers={props => {
+            const {
+              bbox: { west, south, east, north }
+            } = props.tile;
+
+            return new BitmapLayer(props, {
+              data: null,
+              image: props.data,
+              bounds: [west, south, east, north]
+            });
+          }} />
+
         <MVTLayer
           data={`https://cyberjapandata.gsi.go.jp/xyz/experimental_bvmap/{z}/{x}/{y}.pbf`}
           minZoom={4}
