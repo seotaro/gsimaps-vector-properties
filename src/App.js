@@ -3,7 +3,8 @@ import { GeoJsonLayer, BitmapLayer } from '@deck.gl/layers';
 import { MapView } from '@deck.gl/core';
 import { MVTLayer, TileLayer } from '@deck.gl/geo-layers';
 import './App.css';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
+import RasterTilePanel from './components/RasterTilePanel'
 
 const INITIAL_VIEW_STATE = {
   longitude: 138.0,
@@ -14,6 +15,8 @@ const INITIAL_VIEW_STATE = {
 };
 
 function App() {
+  const [isEnableBasemap, enableBasemap] = useState(false);
+
   const tooltip = (object) => {
     if (!object) {
       return null;
@@ -41,8 +44,8 @@ function App() {
       html: `${info}`,
       className: 'tooltip',
       style: {
-        backgroundColor: 'black',
-        color: 'white',
+        backgroundColor: '#111111',
+        color: '#eeeeee',
         opacity: 0.75,
       }
     }
@@ -51,6 +54,13 @@ function App() {
 
   return (
     <Fragment>
+      <RasterTilePanel
+        isEnableBasemap={isEnableBasemap}
+        handleChangeEnableBasemap={
+          (async (isEnable) => { enableBasemap(isEnable); })
+        }
+      />
+
       <DeckGL
         initialViewState={INITIAL_VIEW_STATE}
         controller={true}
@@ -63,6 +73,7 @@ function App() {
           maxZoom={18}
           tileSize={256}
           opacity={1.0}
+          visible={isEnableBasemap}
 
           renderSubLayers={props => {
             const {
