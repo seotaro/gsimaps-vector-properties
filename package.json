@@ -20,7 +20,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-for-githubpages": "rm -rf docs && GENERATE_SOURCEMAP=false REACT_APP_ROUTE_BASENAME='gsimaps-vector-properties' react-scripts build && mv build docs"
   },
   "eslintConfig": {
     "extends": [
