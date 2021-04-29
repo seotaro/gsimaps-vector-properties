@@ -14,3 +14,17 @@
   margin: 0;
   padding: 0 0 1.0em 1.0em ;
 }
+
+.attribution {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: lightgray;
+  color: black;
+  font-size: 12px;
+  line-height: 12px;
+  padding: 5px;
+}
+
+.attribution a:link { color: black; }
+.attribution a:visited { color: black; }
