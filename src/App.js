@@ -1,7 +1,7 @@
 import DeckGL from '@deck.gl/react';
-import { GeoJsonLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, BitmapLayer } from '@deck.gl/layers';
 import { MapView } from '@deck.gl/core';
-import { MVTLayer } from '@deck.gl/geo-layers';
+import { MVTLayer, TileLayer } from '@deck.gl/geo-layers';
 import './App.css';
 import { Fragment } from 'react';
 
@@ -57,6 +57,25 @@ function App() {
         getTooltip={({ object }) => tooltip(object)}
         getCursor={({ isHovering }) => isHovering ? 'pointer' : 'grab'}
       >
+        <TileLayer id='raster'
+          data={'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'}
+          minZoom={5}
+          maxZoom={18}
+          tileSize={256}
+          opacity={1.0}
+
+          renderSubLayers={props => {
+            const {
+              bbox: { west, south, east, north }
+            } = props.tile;
+
+            return new BitmapLayer(props, {
+              data: null,
+              image: props.data,
+              bounds: [west, south, east, north]
+            });
+          }} />
+
         <MVTLayer
           data={`https://cyberjapandata.gsi.go.jp/xyz/experimental_bvmap/{z}/{x}/{y}.pbf`}
           minZoom={4}
