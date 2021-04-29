@@ -138,10 +138,16 @@ function App() {
         </MapView>
       </DeckGL>
       <div className="attribution">
+        <a href="https://maps.gsi.go.jp/development/ichiran.html"
+          target="_blank"
+          rel="noopener noreferrer" >
+          地理院タイル
+        </a>
+        ｜
         <a href="https://maps.gsi.go.jp/development/vt_expt.html"
           target="_blank"
           rel="noopener noreferrer" >
-          © 国土地理院ベクトルタイル提供実験
+          国土地理院ベクトルタイル提供実験
         </a>
       </div>
     </Fragment>
