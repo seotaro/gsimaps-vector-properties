@@ -2,6 +2,7 @@
   "name": "gsimaps-vector-properties",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@deck.gl/core": "^8.4.13",
     "@deck.gl/geo-layers": "^8.4.13",
