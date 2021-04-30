@@ -14,8 +14,10 @@ const INITIAL_VIEW_STATE = {
   maxZoom: 16
 };
 
+const fileter = { layerName: 'symbol', ftCode: 6331 };  // 温泉
+
 function App() {
-  const [isEnableBasemap, enableBasemap] = useState(false);
+  const [isEnableBasemap, enableBasemap] = useState(true);
 
   const tooltip = (object) => {
     if (!object) {
@@ -51,6 +53,13 @@ function App() {
     }
 
   };
+
+  const getColor = ((aaa) => {
+    if (aaa.layerName === fileter.layerName && aaa.ftCode === fileter.ftCode) {
+      return [255, 0, 0, 160];
+    }
+    return [128, 128, 128, 0];
+  });
 
   return (
     <Fragment>
@@ -107,31 +116,25 @@ function App() {
             });
           }}
 
-          getFillColor={f => {
-            switch (f.geometry.type) {
-              case 'Point':
-                return [96, 96, 96];
-              default:
-                return [192, 192, 192];
-            }
-          }}
+          getFillColor={f => getColor(f.properties)}
+
 
           getLineColor={f => {
             switch (f.geometry.type) {
               case 'Point':
               case 'Polygon':
               case 'MultiPolygon':
-                return [128, 128, 128, 0];
+                return [0, 0, 0, 0];
               default:
-                return [128, 128, 128];
+                return getColor(f.properties);
             }
           }}
 
-          lineWidthMinPixels={1}
+          lineWidthMinPixels={2}
 
           pointRadiusScale={1}
           pointRadiusUnits={'pixels'}
-          pointRadiusMinPixels={4}
+          pointRadiusMinPixels={8}
         />
 
         <MapView id="map" controller={true} repeat >
