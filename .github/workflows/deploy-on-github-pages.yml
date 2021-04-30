@@ -24,6 +24,8 @@ jobs:
           rm -rf docs
           GENERATE_SOURCEMAP=false REACT_APP_ROUTE_BASENAME='gsimaps-vector-properties' yarn react-scripts build
           mv build docs
+        env:
+            CI: false
 
       - name: To commit at least one file, add the unique text file.
         run:  date > ./docs/unique.txt
