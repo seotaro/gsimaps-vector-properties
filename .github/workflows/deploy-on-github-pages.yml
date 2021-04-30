@@ -1,0 +1,37 @@
+name: deploy on github pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+      - name: setup node modules
+        run: |
+          npm install yarn
+          yarn add create-react-app
+
+      - name: build
+        run: |
+          rm -rf docs
+          GENERATE_SOURCEMAP=false REACT_APP_ROUTE_BASENAME='gsimaps-vector-properties' yarn react-scripts build
+          mv build docs
+
+      - name: To commit at least one file, add the unique text file.
+        run:  date > ./docs/unique.txt
+
+      - name: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ./docs
+          git commit -m "deploy github pages" -a
+          git pull
+          git push origin main
