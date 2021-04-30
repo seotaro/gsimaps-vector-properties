@@ -16,7 +16,7 @@ jobs:
       - name: setup node modules
         run: |
           npm install yarn
-          yarn add create-react-app
+          yarn install
 
       - name: build
         run: |
